@@ -73,6 +73,17 @@ if [ -f "$TS_FILE" ]; then
 
 	sed -i '/\/files/d' $TS_FILE
 
+	# --- 新增：修改 LuCI 菜单路径从 VPN 移至 服务 (Services) ---
+    # 定位 luci-app-tailscale 的菜单定义文件
+    LUCI_TS_MENU=$(find ../feeds/luci/ -maxdepth 5 -type f -name "luci-app-tailscale.json" | grep "menu.d")
+    
+    if [ -f "$LUCI_TS_MENU" ]; then
+        # 将所有的 admin/vpn/tailscale 替换为 admin/services/tailscale
+        sed -i 's|admin/vpn/tailscale|admin/services/tailscale|g' "$LUCI_TS_MENU"
+        echo "Tailscale menu path has been moved to Services!"
+    fi
+    # -------------------------------------------------------
+
 	cd $PKG_PATH && echo "tailscale has been fixed!"
 fi
 
